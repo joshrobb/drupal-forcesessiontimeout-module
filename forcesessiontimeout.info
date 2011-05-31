@@ -1,3 +1,3 @@
-name = Force Session Close
+name = Force Session Timeout
 description = Force users to be loged out after a set time period - irrespective of activity.
 core = 6.x

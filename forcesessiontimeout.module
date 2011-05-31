@@ -1,27 +1,27 @@
 <?php
 /*
 
-forcesessionclose
+forcesessiontimeout
 
 */
 
-function forcesessionclose_help($path, $arg) {
+function forcesessiontimeout_help($path, $arg) {
 	  $output = '';  //declare your output variable
   switch ($path) {
-    case "admin/help#forcesessionclose":
+    case "admin/help#forcesessiontimeout":
       $output = '<p>'.  t("Set an absolute timeout for logged in users") .'</p>';
       break;
   }
   return $output;
 }
 
-function forcesessionclose_admin() {
+function forcesessiontimeout_admin() {
   $form = array();
 
-  $form['forcesessionclose_maxmins'] = array(
+  $form['forcesessiontimeout_maxmins'] = array(
     '#type' => 'textfield',
     '#title' => t('Maximum number of minutes'),
-    '#default_value' => variable_get('forcesessionclose_maxmins', 0),
+    '#default_value' => variable_get('forcesessiontimeout_maxmins', 0),
     '#size' => 10,
     '#maxlength' => 10,
     '#description' => t("The maximum number of minutes a session can be active. (0 = disabled)."),
@@ -31,15 +31,15 @@ function forcesessionclose_admin() {
   return system_settings_form($form);
 }
 
-function forcesessionclose_menu() {
+function forcesessiontimeout_menu() {
 
   $items = array();
 
-  $items['admin/settings/forcesessionclose'] = array(
-    'title' => 'Force Session Close settings',
+  $items['admin/settings/forcesessiontimeout'] = array(
+    'title' => 'Force Session Timeout settings',
     'description' => 'Description of your settings page',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('forcesessionclose_admin'),
+    'page arguments' => array('forcesessiontimeout_admin'),
     'access arguments' => array('access administration pages'),
     'type' => MENU_NORMAL_ITEM,
    );
@@ -47,21 +47,21 @@ function forcesessionclose_menu() {
   return $items;
 }
 
-function forcesessionclose_admin_validate($form, &$form_state) {
-  $maxmins = $form_state['values']['forcesessionclose_maxmins'];
+function forcesessiontimeout_admin_validate($form, &$form_state) {
+  $maxmins = $form_state['values']['forcesessiontimeout_maxmins'];
   if (!is_numeric($maxmins)) {
-    form_set_error('forcesessionclose_maxmins', t('You must enter an integer for the maximum number of minutes.'));
+    form_set_error('forcesessiontimeout_maxmins', t('You must enter an integer for the maximum number of minutes.'));
   }
   else if ($maxmins < 0) {
-    form_set_error('forcesessionclose_maxmins', t('Maximum number of minutes must be positive.'));
+    form_set_error('forcesessiontimeout_maxmins', t('Maximum number of minutes must be positive.'));
   }
 }
 
 
-function forcesessionclose_init() {
+function forcesessiontimeout_init() {
 	global $user;
 	if($user->uid > 0){
-		$maxmins = variable_get('forcesessionclose_maxmins', 0);
+		$maxmins = variable_get('forcesessiontimeout_maxmins', 0);
 		$absolutetimeout = $user->login + ($maxmins * 60);
 		
 		if ($maxmins > 0 && $absolutetimeout < time()) {
@@ -73,6 +73,6 @@ function forcesessionclose_init() {
 }
 
 
-function forcesessionclose_uninstall() {
-	variable_del('forcesessionclose_maxmins');
+function forcesessiontimeout_uninstall() {
+	variable_del('forcesessiontimeout_maxmins');
 }
